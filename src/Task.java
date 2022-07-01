@@ -5,13 +5,12 @@ public class Task {
     String name;
     String details;
     Integer iD;
-    String status;
+    String status = "NEW";
 
-    public Task(String name, String details, Integer iD, String status) {
+    public Task(String name, String details, Integer iD) {
         this.name = name;
         this.details = details;
         this.iD = iD;
-        this.status = status;
     }
 
     public String getName() {
