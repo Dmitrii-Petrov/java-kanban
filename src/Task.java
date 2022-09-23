@@ -5,12 +5,12 @@ public class Task {
     String name;
     String details;
     Integer iD;
-    String status = "NEW";
+    TaskStatus status = TaskStatus.NEW;
 
-    public Task(String name, String details, Integer iD) {
+    public Task(String name, String details) {
         this.name = name;
         this.details = details;
-        this.iD = iD;
+
     }
 
     public String getName() {
@@ -37,11 +37,11 @@ public class Task {
         this.iD = iD;
     }
 
-    public String getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
 
@@ -57,4 +57,11 @@ public class Task {
     public int hashCode() {
         return Objects.hash(name, details, iD, status);
     }
+
+    enum TaskStatus {
+        NEW,
+        IN_PROGRESS,
+        DONE
+    }
+
 }
