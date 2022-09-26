@@ -6,12 +6,12 @@ public class Manager {
     private Integer taskID = 0;
 
 
-    public String[] getTasksList() {                                            //возвращаем список всех задач
-        String[] taskList = new String[taskID];
+    public String getTasksList() {
+        StringBuilder taskList = new StringBuilder();                        //возвращаем список всех задач
         for (int i = 0; i < taskID; i++) {
-            taskList[i] = tasks.get(i).getName();
+            taskList.append(tasks.get(i).getName()).append(" ");
         }
-        return taskList;
+        return taskList.toString();
     }
 
     public void newTask(Task task) {
@@ -28,6 +28,7 @@ public class Manager {
 
     public void newSubtask(Subtask subtask, Integer epicID) {
         subtask.setiD(taskID);
+        subtask.setEpicID(epicID);
         tasks.put(taskID, subtask);
         ((Epic) tasks.get(epicID)).subtasksList.add(taskID);                                                                //передаем эпику информацию о подзадаче
         epicStatusUpdate(epicID);                                                                                           //меняем статус эпика
@@ -69,12 +70,12 @@ public class Manager {
         int newTasks = 0;
         int doneTasks = 0;
         for (Integer key : ((Epic) tasks.get(iD)).subtasksList) {
-            if (tasks.get(((Epic) tasks.get(iD)).subtasksList.get(key)).status == Task.TaskStatus.NEW) {
+            if (tasks.get(key).status == Task.TaskStatus.NEW) {
                 newTasks++;
-            } else if (tasks.get(((Epic) tasks.get(iD)).subtasksList.get(key)).status == Task.TaskStatus.DONE)
+            } else if (tasks.get(key).status == Task.TaskStatus.DONE)
                 doneTasks++;
         }
-        if (((Epic) tasks.get(iD)).subtasksList.size() == newTasks) {
+        if ((((Epic) tasks.get(iD)).subtasksList.size()) == newTasks) {
             tasks.get(iD).status = Task.TaskStatus.NEW;
         } else if (((Epic) tasks.get(iD)).subtasksList.size() == doneTasks) {
             tasks.get(iD).status = Task.TaskStatus.DONE;

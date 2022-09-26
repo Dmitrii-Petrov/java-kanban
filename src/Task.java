@@ -58,6 +58,16 @@ public class Task {
         return Objects.hash(name, details, iD, status);
     }
 
+    @Override
+    public String toString() {
+        return "Task{" +
+                "name='" + name + '\'' +
+                ", details='" + details + '\'' +
+                ", iD=" + iD +
+                ", status=" + status +
+                '}';
+    }
+
     enum TaskStatus {
         NEW,
         IN_PROGRESS,
