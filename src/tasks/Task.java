@@ -1,10 +1,12 @@
+package tasks;
+
 import java.util.Objects;
 
 public class Task {
 
     String name;
     String details;
-    Integer iD;
+    Integer id;
     TaskStatus status = TaskStatus.NEW;
 
     public Task(String name, String details) {
@@ -29,12 +31,12 @@ public class Task {
         this.details = details;
     }
 
-    public Integer getiD() {
-        return iD;
+    public Integer getId() {
+        return id;
     }
 
-    public void setiD(Integer iD) {
-        this.iD = iD;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public TaskStatus getStatus() {
@@ -50,28 +52,22 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return Objects.equals(name, task.name) && details.equals(task.details) && Objects.equals(iD, task.iD) && Objects.equals(status, task.status);
+        return Objects.equals(name, task.name) && details.equals(task.details) && Objects.equals(id, task.id) && Objects.equals(status, task.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, details, iD, status);
+        return Objects.hash(name, details, id, status);
     }
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "tasks.Task{" +
                 "name='" + name + '\'' +
                 ", details='" + details + '\'' +
-                ", iD=" + iD +
+                ", iD=" + id +
                 ", status=" + status +
                 '}';
-    }
-
-    enum TaskStatus {
-        NEW,
-        IN_PROGRESS,
-        DONE
     }
 
 }

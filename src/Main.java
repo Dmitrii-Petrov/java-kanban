@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import tasks.*;
 
 public class Main {
 
@@ -18,43 +18,37 @@ public class Main {
         manager.newTask(task2);
         manager.newEpic(epic1);
         manager.newEpic(epic2);
-        manager.newSubtask(subtask1,2);
-        manager.newSubtask(subtask2,2);
-        manager.newSubtask(subtask3,3);
+        manager.newSubtask(subtask1, epic1.getId());
+        manager.newSubtask(subtask2, epic1.getId());
+        manager.newSubtask(subtask3, epic2.getId());
 
         System.out.println(manager.getTasksList());
+        System.out.println(manager.getSubtasksList());
+        System.out.println(manager.getEpicsList());
         System.out.println(task1);
         System.out.println(epic1);
         System.out.println(subtask1);
+        System.out.println();
 
-        task1.setStatus(Task.TaskStatus.DONE);
+        task1.setStatus(TaskStatus.DONE);
         manager.updateTask(task1, 0);
         System.out.println(task1);
 
-        subtask1.setStatus(Task.TaskStatus.IN_PROGRESS);
-        manager.updateTask(subtask1, 4);
+        subtask1.setStatus(TaskStatus.IN_PROGRESS);
+        manager.updateSubtask(subtask1, 4);
         System.out.println(subtask1);
         System.out.println(epic1);
 
 
-        subtask1.setStatus(Task.TaskStatus.DONE);
-        subtask2.setStatus(Task.TaskStatus.DONE);
-        manager.updateTask(subtask1, 4);
-        manager.updateTask(subtask2, 5);
+        subtask1.setStatus(TaskStatus.DONE);
+        subtask2.setStatus(TaskStatus.DONE);
+        manager.updateSubtask(subtask1, 4);
+        manager.updateSubtask(subtask2, 5);
         System.out.println(epic1);
 
-        manager.deleteTask(4);
+        manager.deleteSubtask(4);
 
         System.out.println(epic1);
-
-
-
-
-
-
-
-
-
 
     }
 
