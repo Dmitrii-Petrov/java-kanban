@@ -1,4 +1,7 @@
+import manager.Manager;
 import tasks.*;
+
+import java.util.SortedMap;
 
 public class Main {
 
@@ -31,24 +34,35 @@ public class Main {
         System.out.println();
 
         task1.setStatus(TaskStatus.DONE);
-        manager.updateTask(task1, 0);
+        manager.updateTask(task1, 1);
         System.out.println(task1);
 
         subtask1.setStatus(TaskStatus.IN_PROGRESS);
-        manager.updateSubtask(subtask1, 4);
+        manager.updateSubtask(subtask1, 5);
         System.out.println(subtask1);
         System.out.println(epic1);
 
 
         subtask1.setStatus(TaskStatus.DONE);
         subtask2.setStatus(TaskStatus.DONE);
-        manager.updateSubtask(subtask1, 4);
-        manager.updateSubtask(subtask2, 5);
+        manager.updateSubtask(subtask1, 5);
+        manager.updateSubtask(subtask2, 6);
         System.out.println(epic1);
 
-        manager.deleteSubtask(4);
+
 
         System.out.println(epic1);
+        manager.deleteAllTasks();
+        System.out.println(manager.getTasksList());
+
+        manager.deleteEpic(3);
+        System.out.println(manager.getEpicsList());
+        System.out.println(manager.getSubtasksList());
+        System.out.println((manager.getSubtask(6)).getEpicID());
+
+        manager.deleteAllSubtasks();
+
+        System.out.println(manager.getSubtasksList());
 
     }
 
