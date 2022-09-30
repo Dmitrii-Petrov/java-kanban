@@ -108,7 +108,7 @@ public class Manager {
     public void deleteAllEpics() {
         for (Epic epic : epics.values()) {
             for (Integer id : epic.subtasksList.keySet()){
-                (subtasks.get(id)).setEpicID(0);
+                subtasks.remove(id);
             }
         }
         epics.clear();
@@ -126,7 +126,7 @@ public class Manager {
 
     public void deleteEpic(Integer id) {
         for (Integer subtaskID : (epics.get(id)).subtasksList.keySet()){
-            (subtasks.get(subtaskID)).setEpicID(0);
+            subtasks.remove(subtaskID);
         }
         epics.remove(id);
     }
