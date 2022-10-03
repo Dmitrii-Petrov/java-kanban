@@ -1,11 +1,15 @@
+import managers.HistoryManager;
 import managers.InMemoryTaskManager;
+import managers.Managers;
+import managers.TaskManager;
 import tasks.*;
 
 public class Main {
 
     public static void main(String[] args) {
         System.out.println("Let's go!");
-        InMemoryTaskManager inMemoryTaskManager = new InMemoryTaskManager();
+        TaskManager inMemoryTaskManager = (new Managers()).getDefault();
+
 
         Task task1 = new Task("task1", "task1details");
         Task task2 = new Task("task2", "task2details");

@@ -4,14 +4,11 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashMap;
+
+import java.util.*;
+
 
 public interface TaskManager {
-    HashMap<Integer, Task> tasks = new HashMap<>();
-    HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    HashMap<Integer, Epic> epics = new HashMap<>();
 
     Integer taskID = 1;
 
@@ -21,11 +18,11 @@ public interface TaskManager {
 
     Epic getEpic(Integer taskID);
 
-    ArrayList<String> getTasksList();
+    ArrayList<Task> getTasksList();
 
-    ArrayList<String> getSubtasksList();
+    ArrayList<Task> getSubtasksList();
 
-    ArrayList<String> getEpicsList();
+    ArrayList<Task> getEpicsList();
 
     Integer newTask(Task task);
 
@@ -53,7 +50,7 @@ public interface TaskManager {
 
     void deleteEpic(Integer id);
 
-    ArrayList<Task> getHistory();
+    List<Task> getHistory();
 
 }
 

@@ -9,7 +9,8 @@ public class InMemoryTaskManager implements TaskManager {
     HashMap<Integer, Task> tasks = new HashMap<>();
     HashMap<Integer, Subtask> subtasks = new HashMap<>();
     HashMap<Integer, Epic> epics = new HashMap<>();
-    HistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
+
+    HistoryManager inMemoryHistoryManager = (new Managers()).getDefaultHistory();
 
 
     private Integer taskID = 1;
@@ -33,30 +34,18 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<String> getTasksList() {
-        ArrayList<String> taskList = new ArrayList<>();                        //возвращаем список всех задач
-        for (Task task : tasks.values()) {
-            taskList.add(task.getName());
-        }
-        return taskList;
+    public ArrayList<Task> getTasksList() {
+        return new ArrayList<>(tasks.values());
     }
 
     @Override
-    public ArrayList<String> getSubtasksList() {
-        ArrayList<String> taskList = new ArrayList<>();                        //возвращаем список всех задач
-        for (Task task : subtasks.values()) {
-            taskList.add(task.getName());
-        }
-        return taskList;
+    public ArrayList<Task> getSubtasksList() {
+        return new ArrayList<>(subtasks.values());
     }
 
     @Override
-    public ArrayList<String> getEpicsList() {
-        ArrayList<String> taskList = new ArrayList<>();                        //возвращаем список всех задач
-        for (Task task : epics.values()) {
-            taskList.add(task.getName());
-        }
-        return taskList;
+    public ArrayList<Task> getEpicsList() {
+        return new ArrayList<>(epics.values());
     }
 
     @Override
@@ -155,7 +144,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getHistory() {
+    public List<Task> getHistory() {
         return inMemoryHistoryManager.getHistory();
     }
 }
