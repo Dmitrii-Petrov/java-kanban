@@ -10,8 +10,6 @@ import java.util.*;
 
 public interface TaskManager {
 
-    Integer taskID = 1;
-
     Task getTask(Integer taskID);
 
     Subtask getSubtask(Integer taskID);

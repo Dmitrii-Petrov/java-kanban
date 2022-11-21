@@ -56,7 +56,7 @@ public class InMemoryHistoryManager implements HistoryManager {
                 tasks.add(node.data);
             }
             return tasks;
-        } else return null;
+        } else return new ArrayList<>();
     }
 
     public void removeNode(Node node) {
