@@ -97,10 +97,14 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks.clear();
         epics.clear();
         taskID = 1;
+        inMemoryHistoryManager = Managers.getDefaultHistory();
     }
 
     @Override
     public void deleteAllTasks() {
+        for (Integer taskID : tasks.keySet()){
+            inMemoryHistoryManager.remove(taskID);
+        }
         tasks.clear();
     }
 
@@ -110,6 +114,9 @@ public class InMemoryTaskManager implements TaskManager {
             if ((subtask.getEpicID() != null) && (epics.get(subtask.getEpicID()) != null)) {
                 epics.get(subtask.getEpicID()).subtasksList.remove(subtask.getId());
             }
+        }
+        for (Integer subtaskID : subtasks.keySet()){
+            inMemoryHistoryManager.remove(subtaskID);
         }
         subtasks.clear();
     }
@@ -121,17 +128,22 @@ public class InMemoryTaskManager implements TaskManager {
                 subtasks.remove(id);
             }
         }
+        for (Integer epicID : epics.keySet()){
+            inMemoryHistoryManager.remove(epicID);
+        }
         epics.clear();
     }
 
     @Override
     public void deleteTask(Integer id) {
+        inMemoryHistoryManager.remove(id);
         tasks.remove(id);
     }
 
     @Override
     public void deleteSubtask(Integer id) {
         epics.get((subtasks.get(id)).getEpicID()).subtasksList.remove(id);
+        inMemoryHistoryManager.remove(id);
         subtasks.remove(id);
     }
 
@@ -139,13 +151,15 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteEpic(Integer id) {
         for (Integer subtaskID : (epics.get(id)).subtasksList.keySet()) {
             subtasks.remove(subtaskID);
+            inMemoryHistoryManager.remove(subtaskID);
         }
+        inMemoryHistoryManager.remove(id);
         epics.remove(id);
     }
 
     @Override
-    public List<Task> getHistory() {
-        return inMemoryHistoryManager.getHistory();
+    public ArrayList<Task> getHistory() {
+        return inMemoryHistoryManager.getTasks();
     }
 }
 
