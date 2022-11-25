@@ -22,11 +22,11 @@ public interface TaskManager {
 
     ArrayList<Task> getEpicsList();
 
-    Integer newTask(Task task);
+    void newTask(Task task);
 
-    Integer newEpic(Epic epic);
+    void newEpic(Epic epic);
 
-    Integer newSubtask(Subtask subtask, Integer epicID);
+    void newSubtask(Subtask subtask, Integer epicID);
 
     void updateTask(Task task, Integer id);
 

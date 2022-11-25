@@ -12,7 +12,13 @@ public class Task {
     public Task(String name, String details) {
         this.name = name;
         this.details = details;
+    }
 
+    public Task(Integer id, String name, TaskStatus status, String details) {
+        this.name = name;
+        this.details = details;
+        this.id = id;
+        this.status = status;
     }
 
     public String getName() {
@@ -62,12 +68,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "tasks.Task{" +
-                "name='" + name + '\'' +
-                ", details='" + details + '\'' +
-                ", iD=" + id +
-                ", status=" + status +
-                '}';
+        return String.format("%d,%S,%s,%s,%s",id,this.getClass().getSimpleName(),name,status,details);
     }
 
 }

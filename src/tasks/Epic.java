@@ -12,13 +12,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "tasks.Epic{" +
-                "name='" + name + '\'' +
-                ", details='" + details + '\'' +
-                ", iD=" + id +
-                ", status=" + status +
-                ", subtasksList=" + subtasksList.keySet() +
-                '}';
+        return super.toString();
     }
 
     public void updateStatus() {
