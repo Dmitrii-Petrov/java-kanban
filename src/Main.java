@@ -1,16 +1,20 @@
-import managers.HistoryManager;
-import managers.InMemoryTaskManager;
-import managers.Managers;
-import managers.TaskManager;
+import managers.*;
 import tasks.*;
+
+import java.nio.file.Path;
 
 public class Main {
 
     public static void main(String[] args) {
         System.out.println("Let's go!");
         TaskManager inMemoryTaskManager = (new Managers()).getDefault();
+      /*  FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(Path.of("./resources/test.csv"));
 
+        Task task1 = fileBackedTasksManager.fromString("1,SUBTASK,task1,NEW,task2details,33");
+        System.out.println(task1);
 
+       */
+/*
         Task task1 = new Task("task1", "task1details");
         Task task2 = new Task("task2", "task2details");
         Epic epic1 = new Epic("epic1", "epic1details");
@@ -49,6 +53,8 @@ public class Main {
         inMemoryTaskManager.deleteTask(1);
 
         System.out.println(inMemoryTaskManager.getHistory());
+
+*/
 
 
     }
