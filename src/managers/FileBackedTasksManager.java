@@ -39,10 +39,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     break;
                 }
                 Task task = fromString(line);
-                switch (line.split(",")[1]) {
-                    case "TASK" -> fileBackedTasksManager.tasks.put(task.getId(), task);
-                    case "EPIC" -> fileBackedTasksManager.epics.put(task.getId(), (Epic) task);
-                    case "SUBTASK" -> fileBackedTasksManager.subtasks.put(task.getId(), (Subtask) task);
+                switch (TaskType.valueOf(line.split(",")[1])) {
+                    case TASK:
+                        fileBackedTasksManager.tasks.put(task.getId(), task);
+                        break;
+                    case EPIC:
+                        fileBackedTasksManager.epics.put(task.getId(), (Epic) task);
+                        break;
+                    case SUBTASK:
+                        fileBackedTasksManager.subtasks.put(task.getId(), (Subtask) task);
+                        break;
                 }
             }
         } catch (IOException e) {
@@ -71,7 +77,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             out.newLine();
             out.write(historyToString(inMemoryHistoryManager));
 
-        } catch (ManagerSaveException e){
+        } catch (ManagerSaveException e) {
             e.printStackTrace();
         }
     }
@@ -207,7 +213,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         System.out.println(fileBackedTasksManager.epics);
         System.out.println(fileBackedTasksManager.subtasks);
         System.out.println(fileBackedTasksManager.getHistory());
-        FileBackedTasksManager fileBackedTasksManager2 =  FileBackedTasksManager.loadFromFile(Path.of("./resources/test.csv"));
+        FileBackedTasksManager fileBackedTasksManager2 = FileBackedTasksManager.loadFromFile(Path.of("./resources/test.csv"));
         assert fileBackedTasksManager.tasks == fileBackedTasksManager2.tasks;
     }
 }
