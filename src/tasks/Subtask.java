@@ -23,6 +23,6 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return String.format("%d,%S,%s,%s,%s,%d",id,this.getClass().getSimpleName(),name,status,details,epicID);
+        return String.format("%d,%S,%s,%s,%s,%d", id, this.getClass().getSimpleName(), name, status, details, epicID);
     }
 }

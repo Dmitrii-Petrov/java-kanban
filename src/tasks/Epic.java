@@ -26,8 +26,7 @@ public class Epic extends Task {
         for (Subtask subtask : subtasksList.values()) {
             if (subtask.getStatus() == TaskStatus.NEW) {
                 newTasks++;
-            } else if (subtask.getStatus() == TaskStatus.DONE)
-                doneTasks++;
+            } else if (subtask.getStatus() == TaskStatus.DONE) doneTasks++;
         }
         if (subtasksList.size() == newTasks) {
             setStatus(TaskStatus.NEW);
