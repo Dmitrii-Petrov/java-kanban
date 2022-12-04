@@ -1,17 +1,17 @@
 package tasks;
 
+import java.time.Duration;
+
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 public class Epic extends Task {
 
+    LocalDateTime endTime;
     public HashMap<Integer, Subtask> subtasksList = new HashMap<>();
 
-    public Epic(String name, String details) {
-        super(name, details);
-    }
-
-    public Epic(Integer id, String name, TaskStatus status, String details) {
-        super(id, name, status, details);
+    public Epic(Integer id, String name, TaskStatus status, String details, Integer duration, String startTime) {
+        super(id, name, status, details, duration, startTime);
 
     }
 
@@ -20,7 +20,7 @@ public class Epic extends Task {
         return super.toString();
     }
 
-    public void updateStatus() {
+    public void updateEpic() {
         int newTasks = 0;
         int doneTasks = 0;
         for (Subtask subtask : subtasksList.values()) {
@@ -33,5 +33,22 @@ public class Epic extends Task {
         } else if (subtasksList.size() == doneTasks) {
             setStatus(TaskStatus.DONE);
         } else setStatus(TaskStatus.IN_PROGRESS);
+
+        LocalDateTime startTime = this.startTime;
+        LocalDateTime endTime = this.endTime;
+        Duration duration = Duration.ofSeconds(0);
+
+        for (Subtask subtask : subtasksList.values()) {
+            if (startTime.isAfter(subtask.startTime)) {
+                startTime = subtask.startTime;
+            }
+            if (getEndTime().isBefore(subtask.getEndTime())) {
+                endTime = subtask.getEndTime();
+            }
+            duration = duration.plus(subtask.duration);
+        }
+        if (duration.isZero()) {
+            duration = Duration.between(startTime, endTime);
+        }
     }
 }

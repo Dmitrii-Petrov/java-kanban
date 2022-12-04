@@ -1,5 +1,8 @@
 package tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -8,6 +11,9 @@ public class Task {
     String details;
     Integer id;
     TaskStatus status = TaskStatus.NEW;
+    Duration duration;
+    LocalDateTime startTime;
+
 
     public Task(String name, String details) {
         this.name = name;
@@ -19,6 +25,27 @@ public class Task {
         this.details = details;
         this.id = id;
         this.status = status;
+    }
+
+    public Task(Integer id, String name, TaskStatus status, String details, Integer duration, String startTime) {
+        this.name = name;
+        this.details = details;
+        this.id = id;
+        this.status = status;
+        this.duration = Duration.ofMinutes(duration);
+        this.startTime = LocalDateTime.parse(startTime, DateTimeFormatter.ofPattern("dd_MM_yyyy|HH:mm"));
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
     public String getName() {
@@ -68,7 +95,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return String.format("%d,%S,%s,%s,%s",id,this.getClass().getSimpleName(),name,status,details);
+        return String.format("%d,%S,%s,%s,%s,%d,%s", id, this.getClass().getSimpleName(), name, status, details, duration.toMinutes(), startTime.format(DateTimeFormatter.ofPattern("dd_MM_yyyy|HH:mm")));
     }
 
 }

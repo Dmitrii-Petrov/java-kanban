@@ -10,6 +10,7 @@ public class InMemoryTaskManager implements TaskManager {
     HashMap<Integer, Task> tasks = new HashMap<>();
     HashMap<Integer, Subtask> subtasks = new HashMap<>();
     HashMap<Integer, Epic> epics = new HashMap<>();
+    TreeSet<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
     HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
@@ -51,45 +52,88 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void newTask(Task task) throws IOException {
-        task.setId(taskID);
-        tasks.put(taskID, task);
-        taskID++;
+        try {
+            validateTask(task);
+            task.setId(taskID);
+            tasks.put(taskID, task);
+            prioritizedTasks.add(task);
+            taskID++;
+
+        } catch (InvalidTaskTime invalidTaskTime) {
+            System.out.println(invalidTaskTime.getMessage());
+        }
     }
 
     @Override
     public void newEpic(Epic epic) throws IOException {
-        epic.setId(taskID);
-        epics.put(taskID, epic);
-        taskID++;
+        try {
+            validateTask(epic);
+            epic.setId(taskID);
+            epics.put(taskID, epic);
+            prioritizedTasks.add(epic);
+            taskID++;
+        } catch (InvalidTaskTime invalidTaskTime) {
+            System.out.println(invalidTaskTime.getMessage());
+        }
     }
 
     @Override
     public void newSubtask(Subtask subtask, Integer epicID) throws IOException {
-        subtask.setId(taskID);
-        subtask.setEpicID(epicID);
-        subtasks.put(taskID, subtask);
-        (epics.get(epicID)).subtasksList.put(taskID, subtask);                                                                //передаем эпику информацию о подзадаче
-        (epics.get(epicID)).updateStatus();                                                                                         //меняем статус эпика
-        taskID++;
+        try {
+            validateTask(subtask);
+            subtask.setId(taskID);
+            subtask.setEpicID(epicID);
+            subtasks.put(taskID, subtask);
+            (epics.get(epicID)).subtasksList.put(taskID, subtask);                                                                //передаем эпику информацию о подзадаче
+            (epics.get(epicID)).updateEpic();
+            validateTask(epics.get(epicID));
+            prioritizedTasks.add(subtask);
+            taskID++;
+        } catch (InvalidTaskTime invalidTaskTime) {
+            System.out.println(invalidTaskTime.getMessage());
+        }
     }
 
     @Override
     public void updateTask(Task task, Integer id) throws IOException {
-        task.setId(id);
-        tasks.put(id, task);
+        try {
+            validateTask(task);
+            task.setId(id);
+            prioritizedTasks.remove(tasks.get(id));
+            tasks.put(id, task);
+            prioritizedTasks.add(task);
+        } catch (InvalidTaskTime invalidTaskTime) {
+            System.out.println(invalidTaskTime.getMessage());
+        }
     }
 
     @Override
     public void updateSubtask(Subtask subtask, Integer id) throws IOException {
-        subtask.setId(id);
-        subtasks.put(id, subtask);
-        epics.get(subtask.getEpicID()).updateStatus();
+        try {
+            validateTask(subtask);
+            subtask.setId(id);
+            prioritizedTasks.remove(subtasks.get(id));
+            subtasks.put(id, subtask);
+            epics.get(subtask.getEpicID()).updateEpic();
+            validateTask(epics.get(subtask.getEpicID()));
+            prioritizedTasks.add(subtask);
+        } catch (InvalidTaskTime invalidTaskTime) {
+            System.out.println(invalidTaskTime.getMessage());
+        }
     }
 
     @Override
     public void updateEpic(Epic epic, Integer id) throws IOException {
-        epic.setId(id);
-        epics.put(id, epic);
+        try {
+            validateTask(epic);
+            epic.setId(id);
+            prioritizedTasks.remove(epics.get(id));
+            epics.put(id, epic);
+            prioritizedTasks.add(epic);
+        } catch (InvalidTaskTime invalidTaskTime) {
+            System.out.println(invalidTaskTime.getMessage());
+        }
+
     }
 
     @Override
@@ -104,8 +148,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteAllTasks() throws IOException {
         for (Integer taskID : tasks.keySet()) {
+            prioritizedTasks.remove(tasks.get(taskID));
             inMemoryHistoryManager.remove(taskID);
         }
+
         tasks.clear();
     }
 
@@ -117,6 +163,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
         for (Integer subtaskID : subtasks.keySet()) {
+            prioritizedTasks.remove(subtasks.get(subtaskID));
             inMemoryHistoryManager.remove(subtaskID);
         }
         subtasks.clear();
@@ -126,10 +173,12 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteAllEpics() throws IOException {
         for (Epic epic : epics.values()) {
             for (Integer id : epic.subtasksList.keySet()) {
+                prioritizedTasks.remove(subtasks.get(id));
                 subtasks.remove(id);
             }
         }
         for (Integer epicID : epics.keySet()) {
+            prioritizedTasks.remove(epics.get(epicID));
             inMemoryHistoryManager.remove(epicID);
         }
         epics.clear();
@@ -137,14 +186,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTask(Integer id) throws IOException {
+        prioritizedTasks.remove(tasks.get(id));
         inMemoryHistoryManager.remove(id);
         tasks.remove(id);
     }
 
     @Override
     public void deleteSubtask(Integer id) throws IOException {
+        epics.get((subtasks.get(id)).getEpicID()).updateEpic();
         epics.get((subtasks.get(id)).getEpicID()).subtasksList.remove(id);
-        epics.get((subtasks.get(id)).getEpicID()).updateStatus();
+
+        prioritizedTasks.remove(subtasks.get(id));
         inMemoryHistoryManager.remove(id);
         subtasks.remove(id);
     }
@@ -152,9 +204,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteEpic(Integer id) throws IOException {
         for (Integer subtaskID : (epics.get(id)).subtasksList.keySet()) {
+            prioritizedTasks.remove(subtasks.get(subtaskID));
             subtasks.remove(subtaskID);
             inMemoryHistoryManager.remove(subtaskID);
         }
+        prioritizedTasks.remove(epics.get(id));
         inMemoryHistoryManager.remove(id);
         epics.remove(id);
     }
@@ -162,6 +216,27 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public ArrayList<Task> getHistory() {
         return inMemoryHistoryManager.getTasks();
+    }
+
+    public TreeSet<Task> getPrioritizedTasks() {
+        return prioritizedTasks;
+    }
+
+    public void validateTask(Task task) throws InvalidTaskTime {
+        for (Task task1 : prioritizedTasks) {
+            if ((task.getStartTime().isBefore(task1.getStartTime()) && (task.getEndTime().isAfter(task1.getStartTime()))) ||
+                    (task.getStartTime().isBefore(task1.getEndTime()) && (task.getEndTime().isAfter(task1.getEndTime())))) {
+                throw new InvalidTaskTime("Invalid task time");
+
+            }
+        }
+
+    }
+
+    private static class InvalidTaskTime extends Exception {
+        public InvalidTaskTime(String invalidTaskTime) {
+            super(invalidTaskTime);
+        }
     }
 }
 

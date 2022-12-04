@@ -60,7 +60,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     void save() throws IOException {
         try (BufferedWriter out = new BufferedWriter(new FileWriter(String.valueOf(path)))) {
-            out.write("id,type,name,status,description,epic");
+            out.write("id,type,name,status,description,duration,startTime,epic");
             out.newLine();
             for (Task task : tasks.values()) {
                 out.write(task.toString());
@@ -87,13 +87,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         Task task = null;
         switch (TaskType.valueOf(string[1])) {
             case TASK:
-                task = new Task(Integer.parseInt(string[0]), string[2], TaskStatus.valueOf(string[3]), string[4]);
+                task = new Task(Integer.parseInt(string[0]), string[2], TaskStatus.valueOf(string[3]), string[4], Integer.parseInt(string[5]), string[6]);
                 break;
             case EPIC:
-                task = new Epic(Integer.parseInt(string[0]), string[2], TaskStatus.valueOf(string[3]), string[4]);
+                task = new Epic(Integer.parseInt(string[0]), string[2], TaskStatus.valueOf(string[3]), string[4], Integer.parseInt(string[5]), string[6]);
                 break;
             case SUBTASK:
-                task = new Subtask(Integer.parseInt(string[0]), string[2], TaskStatus.valueOf(string[3]), string[4], Integer.parseInt(string[5]));
+                task = new Subtask(Integer.parseInt(string[0]), string[2], TaskStatus.valueOf(string[3]), string[4], Integer.parseInt(string[5]), string[6], Integer.parseInt(string[7]));
                 break;
         }
         return task;
@@ -109,10 +109,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     static List<Integer> historyFromString(String value) {
+
         String[] string = value.split(",");
         List<Integer> list = new ArrayList<>();
+
         for (String st : string) {
-            list.add(Integer.parseInt(st));
+
+            if (!st.isEmpty()) {
+                list.add(Integer.parseInt(st));
+            }
         }
         return list;
     }
@@ -199,21 +204,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public static void main(String[] args) throws IOException {
 
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(Path.of("./resources/test.csv"));
-        Task task1 = fromString("1,TASK,task1,NEW,task2details,33");
-        Task task2 = fromString("2,TASK,task2,NEW,task2details,33");
-        System.out.println(task1);
-        fileBackedTasksManager.newTask(task1);
-        fileBackedTasksManager.newTask(task2);
-        fileBackedTasksManager.getTask(1);
-        fileBackedTasksManager.getTask(2);
-        System.out.println(historyToString(fileBackedTasksManager.inMemoryHistoryManager));
-        fileBackedTasksManager.save();
-        System.out.println(fileBackedTasksManager.tasks);
-        System.out.println(fileBackedTasksManager.epics);
-        System.out.println(fileBackedTasksManager.subtasks);
-        System.out.println(fileBackedTasksManager.getHistory());
-        FileBackedTasksManager fileBackedTasksManager2 = FileBackedTasksManager.loadFromFile(Path.of("./resources/test.csv"));
-        assert fileBackedTasksManager.tasks == fileBackedTasksManager2.tasks;
+
     }
 }
