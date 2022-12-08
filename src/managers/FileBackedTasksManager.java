@@ -200,10 +200,4 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         super.deleteEpic(id);
         save();
     }
-
-
-    public static void main(String[] args) throws IOException {
-
-
-    }
 }

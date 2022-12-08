@@ -1,6 +1,5 @@
 package managers;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Subtask;
@@ -13,14 +12,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TaskManagerTest {
-    InMemoryTaskManager taskManager;
-
-    @BeforeEach
-    public void beforeEach() {
-        taskManager = new InMemoryTaskManager();
-
-    }
+abstract class TaskManagerTest<T extends TaskManager> {
+    T taskManager;
 
     @Test
     void newTask() throws IOException {
@@ -81,7 +74,7 @@ class TaskManagerTest {
     }
 
     @Test
-    void deleteEverything() throws IOException {
+    void shouldDeleteEverything() throws IOException {
         Task task = new Task(1, "testTask", TaskStatus.NEW, "test details", 33, "23_02_2022|22:23");
         taskManager.newTask(task);
         taskManager.deleteEverything();
@@ -89,7 +82,7 @@ class TaskManagerTest {
     }
 
     @Test
-    void deleteAllTasks() throws IOException {
+    void shouldDeleteAllTasks() throws IOException {
         Task task = new Task(1, "testTask", TaskStatus.NEW, "test details", 33, "23_02_2022|22:23");
         taskManager.newTask(task);
         taskManager.deleteAllTasks();
@@ -97,7 +90,7 @@ class TaskManagerTest {
     }
 
     @Test
-    void deleteAllSubtasks() throws IOException {
+    void shouldDeleteAllSubtasks() throws IOException {
         Epic epic = new Epic(1, "testSubtask", TaskStatus.NEW, "test details", 33, "23_02_2022|22:23");
         Subtask subtask = new Subtask(1, "testSubtask", TaskStatus.NEW, "test details", 33, "23_02_2022|22:23", 1);
         taskManager.newEpic(epic);
@@ -107,11 +100,23 @@ class TaskManagerTest {
     }
 
     @Test
-    void deleteAllEpics() throws IOException {
+    void shouldDeleteAllEpics() throws IOException {
         Epic epic = new Epic(1, "testSubtask", TaskStatus.NEW, "test details", 33, "23_02_2022|22:23");
         taskManager.newEpic(epic);
         taskManager.deleteAllEpics();
         assertEquals(Collections.emptyList(), taskManager.getEpicsList(), "Задача не удалена.");
     }
 
+    @Test
+    void shouldNotValidateTask() throws IOException {
+        Epic epic = new Epic(1, "testSubtask", TaskStatus.NEW, "test details", 33, "23_02_2022|22:23");
+        Epic epic1 = new Epic(2, "testSubtask1", TaskStatus.NEW, "test details1", 33, "23_02_2022|22:33");
+        taskManager.newEpic(epic);
+
+
+        InvalidTaskTime ex = assertThrows(InvalidTaskTime.class, () -> taskManager.validateTask(epic1));
+
+        assertEquals("Invalid task time", ex.getMessage());
+
+    }
 }

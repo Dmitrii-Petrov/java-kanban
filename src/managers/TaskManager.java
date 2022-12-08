@@ -51,5 +51,8 @@ public interface TaskManager {
 
     List<Task> getHistory();
 
+    void validateTask(Task task) throws InvalidTaskTime;
+
+    TreeSet<Task> getPrioritizedTasks();
 }
 

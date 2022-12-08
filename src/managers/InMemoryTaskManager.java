@@ -218,10 +218,12 @@ public class InMemoryTaskManager implements TaskManager {
         return inMemoryHistoryManager.getTasks();
     }
 
+    @Override
     public TreeSet<Task> getPrioritizedTasks() {
         return prioritizedTasks;
     }
 
+    @Override
     public void validateTask(Task task) throws InvalidTaskTime {
         for (Task task1 : prioritizedTasks) {
             if ((task.getStartTime().isBefore(task1.getStartTime()) && (task.getEndTime().isAfter(task1.getStartTime()))) ||
@@ -233,10 +235,5 @@ public class InMemoryTaskManager implements TaskManager {
 
     }
 
-    private static class InvalidTaskTime extends Exception {
-        public InvalidTaskTime(String invalidTaskTime) {
-            super(invalidTaskTime);
-        }
-    }
 }
 
