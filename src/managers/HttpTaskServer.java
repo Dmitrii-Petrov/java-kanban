@@ -1,8 +1,13 @@
 package managers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,71 +15,122 @@ import java.net.InetSocketAddress;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.regex.Pattern;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static tasks.TaskStatus.*;
 
 
 public class HttpTaskServer {
-    HttpServer httpServer = HttpServer.create(new InetSocketAddress(8080), 0);
-    static TaskManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(Path.of("./resources/test2.csv"));
 
+    public static final int PORT = 8080;
+    HttpServer server;
+    Gson gson;
 
-    static class TasksHandler implements HttpHandler {
-        @Override
-        public void handle(HttpExchange httpExchange) throws IOException {
+    TaskManager taskManager;
 
-            String method = httpExchange.getRequestMethod();
-            URI requestURI = httpExchange.getRequestURI();
-            String path = requestURI.getPath();
-            String[] splitStrings = path.split("/");
-
-
-            InputStream inputStream = httpExchange.getRequestBody();
-            String body = new String(inputStream.readAllBytes());
-
-
-            System.out.println(splitStrings[2]);
-            //System.out.println("Началась обработка " + method + " /tasks запроса от клиента.");
-
-            String response;
-            switch (splitStrings[2]) {
-                case "task":
-                    switch (method) {
-                        case "POST":
-                            response = fileBackedTasksManager.getTask(1).toString();
-                            break;
-                        case "GET":
-                            response = "Вы использовали метод GET!";
-                            break;
-                        case "DELETE":
-                            response = "Вы использовали метод DELETE!";
-                            fileBackedTasksManager.deleteTask(1);
-                            break;
-
-                        default:
-                            response = "Вы использовали какой-то другой метод!";
-                    }
-                    break;
-                default:
-                    response = "не туда!";
-            }
-
-            httpExchange.sendResponseHeaders(200, 0);
-
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
-        }
-    }
 
     public HttpTaskServer() throws IOException {
+        this.taskManager = Managers.getFileBackedTaskManager(Path.of("./resources/test.csv"));
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
+        server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
+        server.createContext("/tasks", this::handleTasks);
     }
 
+    private void handleTasks(HttpExchange httpExchange) {
+        try {
+            String path = httpExchange.getRequestURI().getPath();
+            String requestMethod = httpExchange.getRequestMethod();
+            String[] pathSplit = path.split("/");
+            switch (requestMethod) {
+                case "GET": {
+                    if (Pattern.matches("^/tasks/+$", path)) {
+
+                    } else switch (pathSplit[2]) {
+                        case "task": {
+                            if (Pattern.matches("^/tasks/task/?id\\d+$", path)) {
+                                break;
+                            } else if (Pattern.matches("^/tasks/task/+$", path)) {
+                                break;
+                            } else {
+                                System.out.println("неверный path");
+                                httpExchange.sendResponseHeaders(405, 0);
+                                break;
+                            }
+                        }
+                        case "epic": {
+                            if (Pattern.matches("^/tasks/epic/?id\\d+$", path)) {
+                                break;
+                            } else if (Pattern.matches("^/tasks/epic/+$", path)) {
+                                break;
+                            } else {
+                                System.out.println("неверный path");
+                                httpExchange.sendResponseHeaders(405, 0);
+                                break;
+                            }
+                        }
+                        case "subtask": {
+                            if (Pattern.matches("^/tasks/subtask/epic/?id\\d+$", path)) {
+
+                                break;
+                            } else {
+                                break;
+                            }
+                        }
+                        case "history": {
+                            break;
+                        }
+                        default: {
+                            System.out.println("неверный path");
+                            httpExchange.sendResponseHeaders(405, 0);
+                        }
+                    }
+
+                    break;
+                }
+                case "POST": {
+                    break;
+                }
+                case "DELETE": {
+
+
+                    break;
+                }
+                default: {
+                    System.out.println("Только методы GET, POST, DELETE. Получили - " + requestMethod);
+                    httpExchange.sendResponseHeaders(405, 0);
+                }
+
+            }
+
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        } finally {
+            httpExchange.close();
+        }
+
+
+    }
+
+    public void start() {
+        System.out.println("Started TaskServer " + PORT);
+        server.start();
+    }
+
+    public void stop() {
+        server.stop(0);
+        System.out.println("Stopped TaskServer " + PORT);
+    }
 
     public static void main(String[] args) throws IOException {
         HttpTaskServer httpTaskServer = new HttpTaskServer();
-        httpTaskServer.httpServer.createContext("/tasks", new TasksHandler());
-        httpTaskServer.httpServer.start();
+        httpTaskServer.start();
+        httpTaskServer.stop();
 
 
     }

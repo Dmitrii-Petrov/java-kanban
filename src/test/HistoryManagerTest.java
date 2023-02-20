@@ -1,6 +1,8 @@
-package managers;
+package test;
 
 
+import managers.Managers;
+import managers.TaskManager;
 import org.junit.jupiter.api.Test;
 import tasks.Task;
 import tasks.TaskStatus;

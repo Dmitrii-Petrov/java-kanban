@@ -36,6 +36,14 @@ public class Task {
         this.startTime = LocalDateTime.parse(startTime, DateTimeFormatter.ofPattern("dd_MM_yyyy|HH:mm"));
     }
 
+    public Task( String name, TaskStatus status, String details, Integer duration, String startTime) {
+        this.name = name;
+        this.details = details;
+        this.status = status;
+        this.duration = Duration.ofMinutes(duration);
+        this.startTime = LocalDateTime.parse(startTime, DateTimeFormatter.ofPattern("dd_MM_yyyy|HH:mm"));
+    }
+
     public LocalDateTime getEndTime() {
         return startTime.plus(duration);
     }

@@ -16,7 +16,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         this.path = path;
     }
 
-    static FileBackedTasksManager loadFromFile(Path path) {
+    public static FileBackedTasksManager loadFromFile(Path path) {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(path);
 
         try (BufferedReader reader = Files.newBufferedReader(path)) {
