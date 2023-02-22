@@ -321,6 +321,8 @@ public class HttpTaskServer {
         HttpTaskServer httpTaskServer = new HttpTaskServer();
 
         httpTaskServer.start();
+        new KVServer().start();
+
     }
 
 }
