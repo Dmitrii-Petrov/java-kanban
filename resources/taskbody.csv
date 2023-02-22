@@ -1,0 +1,25 @@
+[
+	{
+		"name": "testSubtask3",
+		"details": "test details3",
+		"id": 1,
+		"status": "NEW",
+		"duration": {
+			"seconds": 1980,
+			"nanos": 0
+		},
+		"startTime": {
+			"date": {
+				"year": 2022,
+				"month": 2,
+				"day": 21
+			},
+			"time": {
+				"hour": 23,
+				"minute": 23,
+				"second": 0,
+				"nano": 0
+			}
+		}
+	}
+]

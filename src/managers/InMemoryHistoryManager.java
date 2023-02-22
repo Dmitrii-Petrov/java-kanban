@@ -70,6 +70,12 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     }
 
+    @Override
+    public void deleteHistory() {
+        history.clear();
+        historyMap.clear();
+
+    }
 
     static class Node {
 

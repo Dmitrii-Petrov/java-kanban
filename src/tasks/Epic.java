@@ -3,6 +3,7 @@ package tasks;
 import java.time.Duration;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Epic extends Task {
@@ -20,6 +21,9 @@ public class Epic extends Task {
         return super.toString();
     }
 
+    public ArrayList<Subtask> getEpicsSubtasks (){
+        return new ArrayList<>(subtasksList.values());
+    }
     public void updateEpic() {
         int newTasks = 0;
         int doneTasks = 0;

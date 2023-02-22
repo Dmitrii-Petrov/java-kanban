@@ -14,4 +14,6 @@ public interface HistoryManager {
     void remove(int id);
 
     ArrayList<Task> getTasks();
+
+    void deleteHistory();
 }

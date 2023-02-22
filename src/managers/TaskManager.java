@@ -18,11 +18,12 @@ public interface TaskManager {
     Epic getEpic(Integer taskID);
 
     ArrayList<Task> getTasksList();
+    ArrayList<Integer> getTasksIdList();
 
     ArrayList<Task> getSubtasksList();
-
+    ArrayList<Integer> getSubtasksIdList();
     ArrayList<Task> getEpicsList();
-
+    ArrayList<Integer> getEpicsIdList();
     void newTask(Task task) throws IOException;
 
     void newEpic(Epic epic) throws IOException;
@@ -49,10 +50,15 @@ public interface TaskManager {
 
     void deleteEpic(Integer id) throws IOException;
 
+    void deleteEpicSubtasks(Integer id) throws IOException;
+
     List<Task> getHistory();
 
     void validateTask(Task task) throws InvalidTaskTime;
 
     TreeSet<Task> getPrioritizedTasks();
+
+    void clearHistory();
+
 }
 
