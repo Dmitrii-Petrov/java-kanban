@@ -1,16 +1,13 @@
 package managers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
+import java.io.IOException;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
 
 public class Managers {
 
 
-    public static TaskManager getDefault() {
-        return new InMemoryTaskManager();
+    public static TaskManager getDefault() throws IOException, InterruptedException {
+        return new HttpTaskManager("http://localhost:8078/");
     }
     public static TaskManager getFileBackedTaskManager(Path path) {
         return new FileBackedTasksManager(path);

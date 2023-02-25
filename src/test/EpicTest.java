@@ -1,7 +1,9 @@
 package test;
 
+import managers.HttpTaskServer;
 import managers.Managers;
 import managers.TaskManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,15 +16,22 @@ import java.io.IOException;
 class EpicTest {
 
     TaskManager taskManager;
+    HttpTaskServer server;
     Epic epic;
 
     @BeforeEach
-    public void beforeEach() throws IOException {
+    public void beforeEach() throws IOException, InterruptedException {
         taskManager = Managers.getDefault();
+        server = new HttpTaskServer();
+        server.start();
         epic = new Epic(1, "testEpic", TaskStatus.NEW, "test details", 33, "22_02_2022|22:23");
         taskManager.newEpic(epic);
     }
 
+    @AfterEach
+    public void afterEach(){
+        server.stop();
+    }
     @Test
     void shouldReturnNewStatusForEmptyEpic() {
         Assertions.assertEquals(TaskStatus.NEW, epic.getStatus());

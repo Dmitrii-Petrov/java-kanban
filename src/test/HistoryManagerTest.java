@@ -16,6 +16,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class HistoryManagerTest {
     TaskManager taskManager = Managers.getDefault();
 
+    HistoryManagerTest() throws IOException, InterruptedException {
+    }
+
 
     @Test
     void tests() throws IOException {

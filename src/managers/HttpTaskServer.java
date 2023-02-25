@@ -17,6 +17,7 @@ import java.net.InetSocketAddress;
 
 import java.io.IOException;
 
+
 import java.nio.charset.StandardCharsets;
 
 import java.nio.file.Path;
@@ -317,12 +318,21 @@ public class HttpTaskServer {
     }
 
 
-    public static void main(String[] args) throws IOException {
-        HttpTaskServer httpTaskServer = new HttpTaskServer();
-
-        httpTaskServer.start();
+    public static void main(String[] args) throws IOException, InterruptedException {
+//        HttpTaskServer httpTaskServer = new HttpTaskServer();
+//
+//        httpTaskServer.start();
         new KVServer().start();
 
+
+//        KVTaskClient client = new KVTaskClient("http://localhost:8078/");
+//        System.out.println(client.apiToken);
+//
+//        client.put("10101010", "test");
+//        System.out.println(client.load("10101010"));
+//        client.put("10101010", "test2");
+//        System.out.println(client.load("10101010"));
     }
+
 
 }
