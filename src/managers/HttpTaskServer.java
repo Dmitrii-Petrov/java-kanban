@@ -34,8 +34,8 @@ public class HttpTaskServer {
     TaskManager taskManager;
 
 
-    public HttpTaskServer() throws IOException {
-        this.taskManager = Managers.getFileBackedTaskManager(Path.of("./resources/test.csv"));
+    public HttpTaskServer() throws IOException, InterruptedException {
+        this.taskManager = Managers.getDefault();
 
         gson = new GsonBuilder()
                 .registerTypeAdapter(Task.class, new TaskAdapter())
@@ -318,7 +318,7 @@ public class HttpTaskServer {
     }
 
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException {
 //        HttpTaskServer httpTaskServer = new HttpTaskServer();
 //
 //        httpTaskServer.start();

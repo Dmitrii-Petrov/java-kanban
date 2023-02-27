@@ -1,12 +1,10 @@
 package test;
 
 import managers.HttpTaskServer;
+import managers.KVServer;
 import managers.Managers;
 import managers.TaskManager;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.TaskStatus;
@@ -19,6 +17,11 @@ class EpicTest {
     HttpTaskServer server;
     Epic epic;
 
+    @BeforeAll
+    static void beforeAll() throws IOException {
+        new KVServer().start();
+    }
+
     @BeforeEach
     public void beforeEach() throws IOException, InterruptedException {
         taskManager = Managers.getDefault();
@@ -29,9 +32,10 @@ class EpicTest {
     }
 
     @AfterEach
-    public void afterEach(){
+    public void afterEach() {
         server.stop();
     }
+
     @Test
     void shouldReturnNewStatusForEmptyEpic() {
         Assertions.assertEquals(TaskStatus.NEW, epic.getStatus());
