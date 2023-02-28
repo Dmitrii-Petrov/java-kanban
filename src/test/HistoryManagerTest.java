@@ -4,6 +4,7 @@ package test;
 import managers.KVServer;
 import managers.Managers;
 import managers.TaskManager;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import tasks.Task;
@@ -21,9 +22,16 @@ class HistoryManagerTest {
     HistoryManagerTest() throws IOException, InterruptedException {
     }
 
+    static KVServer kvServer;
     @BeforeAll
     static void beforeAll() throws IOException {
-        new KVServer().start();
+        kvServer= new KVServer();
+        kvServer.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        kvServer.stop();
     }
 
     @Test

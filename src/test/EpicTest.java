@@ -17,9 +17,17 @@ class EpicTest {
     HttpTaskServer server;
     Epic epic;
 
+    static KVServer kvServer;
+
     @BeforeAll
     static void beforeAll() throws IOException {
-        new KVServer().start();
+        kvServer= new KVServer();
+        kvServer.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        kvServer.stop();
     }
 
     @BeforeEach

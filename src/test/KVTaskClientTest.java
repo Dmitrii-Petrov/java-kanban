@@ -11,10 +11,18 @@ class KVTaskClientTest {
 
     KVTaskClient client;
 
+    static KVServer kvServer;
     @BeforeAll
     static void beforeAll() throws IOException {
-        new KVServer().start();
+        kvServer= new KVServer();
+        kvServer.start();
     }
+
+    @AfterAll
+    static void afterAll() {
+        kvServer.stop();
+    }
+
 
     @BeforeEach
     public void beforeEach() throws IOException, InterruptedException {

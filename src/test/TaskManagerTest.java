@@ -17,6 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 abstract class TaskManagerTest<T extends TaskManager> {
     T taskManager;
 
+
+
     @Test
     void newTask() throws IOException {
         Task task = new Task(1, "testTask", TaskStatus.NEW, "test details", 33, "23_02_2022|22:23");
