@@ -1,8 +1,10 @@
 package test;
 
 
+import managers.KVServer;
 import managers.Managers;
 import managers.TaskManager;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import tasks.Task;
 import tasks.TaskStatus;
@@ -19,6 +21,10 @@ class HistoryManagerTest {
     HistoryManagerTest() throws IOException, InterruptedException {
     }
 
+    @BeforeAll
+    static void beforeAll() throws IOException {
+        new KVServer().start();
+    }
 
     @Test
     void tests() throws IOException {
